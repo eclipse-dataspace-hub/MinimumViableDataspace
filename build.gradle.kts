@@ -39,8 +39,8 @@ subprojects {
             tasks.register("dockerize", DockerBuildImage::class) {
                 val dockerContextDir = project.projectDir
                 dockerFile.set(file("$dockerContextDir/src/main/docker/Dockerfile"))
-                images.add("ghcr.io/eclipse-edc/minimumviabledataspace/${project.name}:${project.version}")
-                images.add("ghcr.io/eclipse-edc/minimumviabledataspace/${project.name}:latest")
+                images.add("ghcr.io/eclipse-dataspace-hub/minimumviabledataspace/${project.name}:${project.version}")
+                images.add("ghcr.io/eclipse-dataspace-hub/minimumviabledataspace/${project.name}:latest")
                 // specify platform with the -Dplatform flag:
                 if (System.getProperty("platform") != null)
                     platform.set(System.getProperty("platform"))

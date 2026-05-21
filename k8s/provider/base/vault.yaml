@@ -34,6 +34,7 @@ spec:
           image: hashicorp/vault:latest
           ports:
             - containerPort: 8200
+
           env:
             - name: VAULT_DEV_ROOT_TOKEN_ID
               value: "root"
@@ -75,6 +76,10 @@ spec:
               value: "http://vault.provider.svc.cluster.local:8200"
             - name: VAULT_TOKEN
               value: "root"
+          securityContext:
+            capabilities:
+              add:
+                - IPC_LOCK
           command: [ "sh", "-ec" ]
           args:
             - |

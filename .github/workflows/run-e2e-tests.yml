@@ -63,10 +63,10 @@ jobs:
       - name: "Load runtime images into KinD"
         run: | 
           kind load docker-image -n dcp-demo \
-          ghcr.io/eclipse-edc/minimumviabledataspace/controlplane:latest \
-          ghcr.io/eclipse-edc/minimumviabledataspace/dataplane:latest \
-          ghcr.io/eclipse-edc/minimumviabledataspace/identity-hub:latest \
-          ghcr.io/eclipse-edc/minimumviabledataspace/issuerservice:latest
+          ghcr.io/eclipse-dataspace-hub/minimumviabledataspace/controlplane:latest \
+          ghcr.io/eclipse-dataspace-hub/minimumviabledataspace/dataplane:latest \
+          ghcr.io/eclipse-dataspace-hub/minimumviabledataspace/identity-hub:latest \
+          ghcr.io/eclipse-dataspace-hub/minimumviabledataspace/issuerservice:latest
 
       - name: "Update image pull policy"
         run: |-

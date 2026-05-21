@@ -94,7 +94,7 @@ fixes of all upstream components.
 > We have monitoring systems in place that inform us about broken builds. No need to raise issues about this.
 
 More conservative developers may fall back
-to [releases of MVD](https://github.com/eclipse-edc/MinimumViableDataspace/releases) that use release versions of all
+to [releases of MVD](https://github.com/eclipse-dataspace-hub/minimumviabledataspace/releases) that use release versions of all
 upstream components. If this is you, then remember to check out the appropriate tag after cloning the repo.
 
 Either download the ZIP file and use sources therein, or check out the corresponding tag.
@@ -221,10 +221,10 @@ All commands are executed from the **repository's root folder** unless stated ot
 > namespace, plainly for the sake of simplicity.
 
 This builds the runtime images and creates the following docker images:
-`ghcr.io/eclipse-edc/minimumviabledataspace/controlplane:latest`,
-`ghcr.io/eclipse-edc/minimumviabledataspace/dataplane:latest`,
-`ghcr.io/eclipse-edc/minimumviabledataspace/issuerservice:latest` and
-`ghcr.io/eclipse-edc/minimumviabledataspace/identity-hub:latest` in the local docker image cache.
+`ghcr.io/eclipse-dataspace-hub/minimumviabledataspace/controlplane:latest`,
+`ghcr.io/eclipse-dataspace-hub/minimumviabledataspace/dataplane:latest`,
+`ghcr.io/eclipse-dataspace-hub/minimumviabledataspace/issuerservice:latest` and
+`ghcr.io/eclipse-dataspace-hub/minimumviabledataspace/identity-hub:latest` in the local docker image cache.
 
 PostgreSQL and Hashicorp Vault obviously require additional configuration, which is handled by the Kubernetes manifests
 via batch jobs.
@@ -262,10 +262,10 @@ grep -rlZ "imagePullPolicy: Always" k8s | xargs sed -i "s/imagePullPolicy: Alway
  
 # Load docker images into KinD
 kind load docker-image \
-  ghcr.io/eclipse-edc/minimumviabledataspace/controlplane:latest \
-  ghcr.io/eclipse-edc/minimumviabledataspace/dataplane:latest \
-  ghcr.io/eclipse-edc/minimumviabledataspace/identity-hub:latest \
-  ghcr.io/eclipse-edc/minimumviabledataspace/issuerservice:latest -n mvd
+  ghcr.io/eclipse-dataspace-hub/minimumviabledataspace/controlplane:latest \
+  ghcr.io/eclipse-dataspace-hub/minimumviabledataspace/dataplane:latest \
+  ghcr.io/eclipse-dataspace-hub/minimumviabledataspace/identity-hub:latest \
+  ghcr.io/eclipse-dataspace-hub/minimumviabledataspace/issuerservice:latest -n mvd
 ```
 
 #### 4.2.3 Deploy MVD components

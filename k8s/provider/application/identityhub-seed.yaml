@@ -214,12 +214,12 @@ spec:
                       \"issuerDid\": \"did:web:issuerservice.issuer.svc.cluster.local%3A10016:issuer\",
                       \"holderPid\": \"${HOLDER_PID}\",
                       \"credentials\": [{
-                        \"format\": \"VC2_0_JOSE\",
+                        \"format\": \"vc20-bssl/jwt\",
                         \"type\": \"MembershipCredential\",
                         \"id\": \"membership-credential-def\"
                       },
                       {
-                        \"format\": \"VC2_0_JOSE\",
+                        \"format\": \"vc20-bssl/jwt\",
                         \"type\": \"ManufacturerCredential\",
                         \"id\": \"manufacturer-credential-def\"
                     }]

@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
         - name: identityhub
-          image: ghcr.io/eclipse-edc/minimumviabledataspace/identity-hub:latest
+          image: ghcr.io/eclipse-dataspace-hub/minimumviabledataspace/identity-hub:latest
           imagePullPolicy: Always
           envFrom:
             - configMapRef:

@@ -75,6 +75,10 @@ spec:
               value: "http://vault.issuer.svc.cluster.local:8200"
             - name: VAULT_TOKEN
               value: "root"
+          securityContext:
+            capabilities:
+              add:
+                - IPC_LOCK
           command: [ "sh", "-ec" ]
           args:
             - |

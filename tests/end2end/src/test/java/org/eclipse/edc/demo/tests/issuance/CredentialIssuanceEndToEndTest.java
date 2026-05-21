@@ -72,7 +72,7 @@ public class CredentialIssuanceEndToEndTest {
                           "issuerDid": "%s",
                           "holderPid": "%s",
                           "credentials": [
-                            {"format": "VC2_0_JOSE", "type": "MembershipCredential", "id": "membership-credential-def"}
+                            {"format": "vc20-bssl/jwt", "type": "MembershipCredential", "id": "membership-credential-def"}
                           ]
                         }
                         """.formatted(ISSUER_DID, HOLDER_PID))
