@@ -12,14 +12,15 @@ post {
 
 body:json {
   {
-    "did": "did:web:test",
-    "participantId": "did:web:test",
-    "name": "Test Participant"
+    "did": "did:web:hydrogen.operator.svc.cluster.local", 
+    "participantId": "hydrogen-operator",
+    "name": "Hydrogen Infrastructure Operator"
   }
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }
 
 docs {
