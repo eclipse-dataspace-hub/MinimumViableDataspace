@@ -76,7 +76,7 @@ public class CredentialIssuanceEndToEndTest {
                           ]
                         }
                         """.formatted(ISSUER_DID, HOLDER_PID))
-                .post("/api/identity/v1alpha/participants/%s/credentials/request".formatted(PARTICIPANT_CONTEXT_ID))
+                .post("/api/identity/v1beta/participants/%s/credentials/request".formatted(PARTICIPANT_CONTEXT_ID))
                 .then()
                 .log().ifValidationFails()
                 .statusCode(201)
@@ -91,7 +91,7 @@ public class CredentialIssuanceEndToEndTest {
                 .pollDelay(TEST_POLL_DELAY)
                 .untilAsserted(() -> {
                     baseRequest()
-                            .get("/api/identity/v1alpha/participants/%s/credentials/request/%s".formatted(PARTICIPANT_CONTEXT_ID, requestId))
+                            .get("/api/identity/v1beta/participants/%s/credentials/request/%s".formatted(PARTICIPANT_CONTEXT_ID, requestId))
                             .then()
                             .log().ifValidationFails()
                             .statusCode(200)
@@ -100,7 +100,7 @@ public class CredentialIssuanceEndToEndTest {
 
         // check that the holder now has credentials in storage
         List<List<String>> list = baseRequest()
-                .get("/api/identity/v1alpha/credentials")
+                .get("/api/identity/v1beta/credentials")
                 .jsonPath()
                 .getList("verifiableCredential.credential.type");
 

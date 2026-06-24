@@ -48,11 +48,35 @@ spec:
       containers:
         - name: seed-controlplane
           image: curlimages/curl:latest
+          env:
+            - name: KC_HOST
+              value: "http://keycloak.mvd-common.svc.cluster.local:8080"
+            - name: ADMIN_CLIENT_ID
+              value: "admin"
+            - name: ADMIN_CLIENT_SECRET
+              value: "edc-v-admin-secret"
           command:
             - sh
             - -c
             - |
               set -e
+
+              # The Management API is scope-protected. Obtain an admin token from Keycloak.
+              # CelExpression and dataplane registration require the management-api:admin scope.
+              echo "Waiting for Keycloak..."
+              until curl -sf "${KC_HOST}/realms/mvd/.well-known/openid-configuration" >/dev/null 2>&1; do
+                echo "Keycloak not ready, retrying..."; sleep 2
+              done
+              ADMIN_TOKEN=$(curl -sf -X POST "${KC_HOST}/realms/mvd/protocol/openid-connect/token" \
+                -H "Content-Type: application/x-www-form-urlencoded" \
+                -d "grant_type=client_credentials" \
+                -d "client_id=${ADMIN_CLIENT_ID}" \
+                -d "client_secret=${ADMIN_CLIENT_SECRET}" \
+                -d "scope=management-api:admin" | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p')
+              if [ -z "$ADMIN_TOKEN" ]; then
+                echo "Failed to get Management API token"
+                exit 1
+              fi
 
               ASSETS_URL="http://controlplane.provider.svc.cluster.local:8081/api/mgmt/v4/assets"
               POLICIES_URL="http://controlplane.provider.svc.cluster.local:8081/api/mgmt/v4/policydefinitions"
@@ -63,6 +87,7 @@ spec:
               # Posts to the management API, treating 409 (already exists) as success.
               post() {
                 RESPONSE=$(curl -sS -w "\n%{http_code}" -X "$2" "$1" \
+                  -H "Authorization: Bearer ${ADMIN_TOKEN}" \
                   -H "Content-Type: application/json" \
                   -d "$3")
                 HTTP_STATUS=$(echo "${RESPONSE}" | tail -n1)

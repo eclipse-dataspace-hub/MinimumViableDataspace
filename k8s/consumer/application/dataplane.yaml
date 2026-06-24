@@ -35,7 +35,7 @@ spec:
       containers:
         - name: dataplane
           image: ghcr.io/eclipse-dataspace-hub/minimumviabledataspace/dataplane:latest
-          imagePullPolicy: Always
+          imagePullPolicy: Never
           envFrom:
             - configMapRef:
                 name: dataplane-config

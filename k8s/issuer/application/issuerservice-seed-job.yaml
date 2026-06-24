@@ -71,6 +71,27 @@ spec:
             - |
               set -e
 
+              # http <description> <METHOD> <url> [curl args...]
+              # Performs the request and, unless the response code is 2xx or 409
+              # (already exists), prints the HTTP status, an error message and the
+              # response body, then aborts.
+              http() {
+                DESC="$1"; METHOD="$2"; URL="$3"; shift 3
+                RESPONSE=$(curl -sS -w "\n%{http_code}" -X "${METHOD}" "${URL}" "$@" || true)
+                HTTP_STATUS=$(echo "${RESPONSE}" | tail -n1)
+                BODY=$(echo "${RESPONSE}" | sed '$d')
+                if [ "${HTTP_STATUS:-0}" -eq 409 ]; then
+                  echo "⚠ ${DESC}: already exists (HTTP 409), skipping."
+                elif [ "${HTTP_STATUS:-0}" -ge 200 ] && [ "${HTTP_STATUS:-0}" -lt 300 ]; then
+                  echo "✓ ${DESC} (HTTP ${HTTP_STATUS})"
+                else
+                  echo "✗ ${DESC} failed"
+                  echo "  HTTP status: ${HTTP_STATUS}"
+                  echo "  Response body: ${BODY}"
+                  exit 1
+                fi
+              }
+
               echo "================================================"
               echo "Step 1: Create Vault Access Token (Issuer)"
               echo "================================================"
@@ -88,9 +109,8 @@ spec:
                 exit 1
               fi
 
-              # Create Keycloak client for Vault access
-              echo "Creating Vault Access Client"
-              if curl -sf -X POST "${KC_HOST}/admin/realms/mvd/clients" \
+              # Create the Keycloak client used by the issuer tenant for Vault access
+              http "Vault access client (issuer)" POST "${KC_HOST}/admin/realms/mvd/clients" \
                 -H "Authorization: Bearer ${KC_TOKEN}" \
                 -H "Content-Type: application/json" \
                 -d '{
@@ -105,6 +125,7 @@ spec:
                   "standardFlowEnabled": false,
                   "directAccessGrantsEnabled": false,
                   "fullScopeAllowed": true,
+                  "defaultClientScopes": [ "issuer-admin-api:admin", "issuer-admin-api:write", "issuer-admin-api:read" ],
                   "protocolMappers": [
                     {
                       "name": "participantContextId",
@@ -135,11 +156,7 @@ spec:
                       }
                     }
                   ]
-                }'; then
-                echo "✓ Vault Access Token created"
-              else
-                echo "⚠ Vault Access Client creation failed (may already exist)"
-              fi
+                }'
 
               echo ""
               echo "================================================"
@@ -147,12 +164,12 @@ spec:
               echo "================================================"
 
               # Get provisioner token
-              PROVISIONER_TOKEN=$(curl -sfv -X POST "${KC_HOST}/realms/mvd/protocol/openid-connect/token" \
+              PROVISIONER_TOKEN=$(curl -sf  "${KC_HOST}/realms/mvd/protocol/openid-connect/token" \
                 -H "Content-Type: application/x-www-form-urlencoded" \
                 -d "grant_type=client_credentials" \
                 -d "client_id=provisioner" \
                 -d "client_secret=provisioner-secret" \
-                -d "scope=issuer-admin-api:write" | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p')
+                -d "scope=identity-api:admin" | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p')
 
               if [ -z "$PROVISIONER_TOKEN" ]; then
                 echo "Failed to get provisioner token"
@@ -160,15 +177,15 @@ spec:
               fi
 
               # Create issuer tenant
-              TENANT_RESPONSE=$(curl -sfv -X POST "http://issuerservice.issuer.svc.cluster.local:10015/api/identity/v1alpha/participants" \
+              http "Issuer tenant" POST "http://issuerservice.issuer.svc.cluster.local:10015/api/identity/v1beta/participants" \
                 -H "Authorization: Bearer ${PROVISIONER_TOKEN}" \
                 -H "Content-Type: application/json" \
                 -d '{
-                  "roles": ["admin"],
+                  "scopes": ["issuer-admin-api:admin"],
                   "serviceEndpoints": [
                     {
                       "type": "IssuerService",
-                      "serviceEndpoint": "http://issuerservice.issuer.svc.cluster.local:10012/api/issuance/v1alpha/participants/issuer",
+                      "serviceEndpoint": "http://issuerservice.issuer.svc.cluster.local:10012/api/issuance/v1beta/participants/issuer",
                       "id": "issuer-service-1"
                     }
                   ],
@@ -196,9 +213,7 @@ spec:
                       }
                     }
                   }
-                }')
-
-              echo "✓ Issuer tenant created"
+                }'
 
               echo ""
               echo "================================================"
@@ -206,12 +221,12 @@ spec:
               echo "================================================"
 
               # Get issuer token
-              ISSUER_TOKEN=$(curl -sfv -X POST "${KC_HOST}/realms/mvd/protocol/openid-connect/token" \
+              ISSUER_TOKEN=$(curl -sf -X POST "${KC_HOST}/realms/mvd/protocol/openid-connect/token" \
                 -H "Content-Type: application/x-www-form-urlencoded" \
                 -d "grant_type=client_credentials" \
                 -d "client_id=issuer" \
                 -d "client_secret=issuer-secret" \
-                -d "scope=issuer-admin-api:write" | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p')
+                -d "scope=issuer-admin-api:admin" | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p')
 
               if [ -z "$ISSUER_TOKEN" ]; then
                 echo "Failed to get issuer token"
@@ -219,8 +234,7 @@ spec:
               fi
 
               # Create attestation definitions
-              echo "Creating Membership AttestationDefinition"
-              curl -sfS -w "\nHTTP_STATUS:%{http_code}\n" -X POST "http://issuerservice.issuer.svc.cluster.local:10013/api/admin/v1alpha/participants/issuer/attestations" \
+              http "Membership attestation definition" POST "http://issuerservice.issuer.svc.cluster.local:10013/api/admin/v1beta/participants/issuer/attestations" \
                 -H "Authorization: Bearer ${ISSUER_TOKEN}" \
                 -H "Content-Type: application/json" \
                 -d '{
@@ -229,8 +243,7 @@ spec:
                   "id": "membership-attestation-def-1"
                 }'
               
-              echo "Creating Manufacturer AttestationDefinition"
-              curl -sfS -w "\nHTTP_STATUS:%{http_code}\n" -X POST "http://issuerservice.issuer.svc.cluster.local:10013/api/admin/v1alpha/participants/issuer/attestations" \
+              http "Manufacturer attestation definition" POST "http://issuerservice.issuer.svc.cluster.local:10013/api/admin/v1beta/participants/issuer/attestations" \
                 -H "Authorization: Bearer ${ISSUER_TOKEN}" \
                 -H "Content-Type: application/json" \
                 -d '{
@@ -247,8 +260,7 @@ spec:
               echo "================================================"
 
               # Create credential definitions
-              echo "Creating Membership CredentialDefinition"
-              curl -sfS -w "\nHTTP_STATUS:%{http_code}\n" -X POST "http://issuerservice.issuer.svc.cluster.local:10013/api/admin/v1alpha/participants/issuer/credentialdefinitions" \
+              http "Membership credential definition" POST "http://issuerservice.issuer.svc.cluster.local:10013/api/admin/v1beta/participants/issuer/credentialdefinitions" \
                 -H "Authorization: Bearer ${ISSUER_TOKEN}" \
                 -H "Content-Type: application/json" \
                 -d '{
@@ -284,8 +296,7 @@ spec:
                   "validity": "604800"
                 }'
               
-              echo "Creating Manufacturer CredentialDefinition"
-              curl -sfS -w "\nHTTP_STATUS:%{http_code}\n" -X POST "http://issuerservice.issuer.svc.cluster.local:10013/api/admin/v1alpha/participants/issuer/credentialdefinitions" \
+              http "Manufacturer credential definition" POST "http://issuerservice.issuer.svc.cluster.local:10013/api/admin/v1beta/participants/issuer/credentialdefinitions" \
                 -H "Authorization: Bearer ${ISSUER_TOKEN}" \
                 -H "Content-Type: application/json" \
                 -d '{

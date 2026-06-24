@@ -159,16 +159,64 @@ data:
             "include.in.token.scope": "true",
             "display.on.consent.screen": "true"
           }
+        },
+        {
+          "name": "management-api:read",
+          "description": "Read access to the Management API",
+          "protocol": "openid-connect",
+          "attributes": {
+            "include.in.token.scope": "true",
+            "display.on.consent.screen": "true"
+          }
+        },
+        {
+          "name": "management-api:write",
+          "description": "Write access to the Management API",
+          "protocol": "openid-connect",
+          "attributes": {
+            "include.in.token.scope": "true",
+            "display.on.consent.screen": "true"
+          }
+        },
+        {
+          "name": "management-api:admin",
+          "description": "Admin (cross-tenant) access to the Management API",
+          "protocol": "openid-connect",
+          "attributes": {
+            "include.in.token.scope": "true",
+            "display.on.consent.screen": "true"
+          }
+        },
+        {
+          "name": "identity-api:admin",
+          "description": "Admin (cross-tenant) access to the Identity API",
+          "protocol": "openid-connect",
+          "attributes": {
+            "include.in.token.scope": "true",
+            "display.on.consent.screen": "true"
+          }
+        },
+        {
+          "name": "issuer-admin-api:admin",
+          "description": "Admin (cross-tenant) access to the Issuer Admin API",
+          "protocol": "openid-connect",
+          "attributes": {
+            "include.in.token.scope": "true",
+            "display.on.consent.screen": "true"
+          }
         }
       ],
       "defaultOptionalClientScopes": [
         "offline_access",
         "management-api:read",
         "management-api:write",
+        "management-api:admin",
         "identity-api:read",
         "identity-api:write",
+        "identity-api:admin",
         "issuer-admin-api:read",
-        "issuer-admin-api:write"
+        "issuer-admin-api:write",
+        "issuer-admin-api:admin"
       ],
       "clients": [
         {
@@ -202,8 +250,11 @@ data:
           "defaultClientScopes": [
             "issuer-admin-api:write",
             "issuer-admin-api:read",
+            "issuer-admin-api:admin",
             "identity-api:write",
-            "identity-api:read"
+            "identity-api:read",
+            "identity-api:admin",
+            "management-api:admin"
           ]
         },
         {
@@ -239,8 +290,10 @@ data:
             "issuer-admin-api:read",
             "identity-api:write",
             "identity-api:read",
+            "identity-api:admin",
             "management-api:write",
-            "management-api:read"
+            "management-api:read",
+            "management-api:admin"
           ]
         }
       ],

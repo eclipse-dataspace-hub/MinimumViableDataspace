@@ -79,7 +79,7 @@ spec:
               - name: ADMIN_CLIENT_SECRET
                 value: "edc-v-admin-secret"
               - name: IH_URL
-                value: "http://identityhub.provider.svc.cluster.local:7081/api/identity/v1alpha/participants/"
+                value: "http://identityhub.provider.svc.cluster.local:7081/api/identity/v1beta/participants/"
               - name: PARTICIPANT_DID
                 value: "did:web:identityhub.provider.svc.cluster.local%3A7083:provider"
               - name: PARTICIPANT_ID
@@ -89,7 +89,7 @@ spec:
               - name: ISSUER_CLIENT_SECRET
                 value: "issuer-secret"
               - name: ISSUER_ADMIN_URL
-                value: "http://issuerservice.issuer.svc.cluster.local:10013/api/admin/v1alpha"
+                value: "http://issuerservice.issuer.svc.cluster.local:10013/api/admin/v1beta"
           command:
             - sh
             - -c
@@ -106,7 +106,7 @@ spec:
                 -d "grant_type=client_credentials" \
                 -d "client_id=${ISSUER_CLIENT_ID}" \
                 -d "client_secret=${ISSUER_CLIENT_SECRET}" \
-                -d "scope=issuer-admin-api:write" | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p')
+                -d "scope=issuer-admin-api:admin" | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p')
 
               if [ -z "$ISSUER_TOKEN" ]; then
                 echo "Failed to get issuer token"
@@ -142,7 +142,7 @@ spec:
                   -d "grant_type=client_credentials" \
                   -d "client_id=${PROVISIONER_CLIENT_ID}" \
                   -d "client_secret=${PROVISIONER_CLIENT_SECRET}" \
-                  -d "scope=issuer-admin-api:write" | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p')
+                  -d "scope=identity-api:admin" | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p')
 
                 if [ -z "$PROVISIONER_TOKEN" ]; then
                   echo "Failed to get issuer token"
@@ -153,7 +153,7 @@ spec:
                 -H "Authorization: Bearer ${PROVISIONER_TOKEN}" \
                 -H "Content-Type: application/json" \
                 -d "{
-                  \"roles\": [],
+                  \"scopes\": [],
                   \"serviceEndpoints\": [
                     {
                       \"type\": \"CredentialService\",
@@ -199,14 +199,14 @@ spec:
                   -d "grant_type=client_credentials" \
                   -d "client_id=${ADMIN_CLIENT_ID}" \
                   -d "client_secret=${ADMIN_CLIENT_SECRET}" \
-                  -d "scope=identity-api:write" | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p')
+                  -d "scope=identity-api:admin" | sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p')
 
                 if [ -z "$ADMIN_TOKEN" ]; then
                   echo "Failed to get OAuth2 token"
                   exit 1
                 fi
               
-              HOLDER_PID="credential-request-1"
+              HOLDER_PID="provider-credential-request-1"
               RESPONSE=$(curl -sS -w "\n%{http_code}" -X POST "${IH_URL}${PARTICIPANT_ID}/credentials/request" \
                 -H "Authorization: Bearer ${ADMIN_TOKEN}" \
                 -H "Content-Type: application/json" \

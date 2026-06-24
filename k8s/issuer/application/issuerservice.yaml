@@ -34,7 +34,7 @@ spec:
       containers:
         - name: issuerservice
           image: ghcr.io/eclipse-dataspace-hub/minimumviabledataspace/issuerservice:latest
-          imagePullPolicy: Always
+          imagePullPolicy: Never
           ports:
             - containerPort: 80
               protocol: TCP

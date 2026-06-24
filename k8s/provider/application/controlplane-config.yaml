@@ -54,8 +54,8 @@ data:
   # to do this properly, we should probably configure the following properties on the ingress route:
   #    proxy_set_header Host $host;
   #    proxy_set_header X-Forwarded-Proto $scheme;
-  edc.iam.oauth2.issuer: "http://keycloak.provider.svc.cluster.local:8080/realms/edcv"
-  edc.iam.oauth2.jwks.url: "http://keycloak.provider.svc.cluster.local:8080/realms/edcv/protocol/openid-connect/certs"
+  edc.iam.oauth2.issuer: "http://keycloak.mvd-common.svc.cluster.local:8080/realms/mvd"
+  edc.iam.oauth2.jwks.url: "http://keycloak.mvd-common.svc.cluster.local:8080/realms/mvd/protocol/openid-connect/certs"
 
   # Default scopes config
   edc.iam.dcp.scopes.membership.id: "membership-scope"
