@@ -17,7 +17,7 @@ plugins {
 }
 
 dependencies {
-    api(libs.edc.spi.boot)
+    api(libs.edc.spi.core)
     api(libs.edc.spi.dataplane.signaling)
 }
 

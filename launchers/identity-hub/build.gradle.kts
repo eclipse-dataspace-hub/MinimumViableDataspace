@@ -23,7 +23,7 @@ dependencies {
     runtimeOnly(libs.edc.vault.hashicorp)
     runtimeOnly(libs.edc.bom.identityhub.sql)
 
-    testImplementation(libs.edc.spi.identity.did)
+    testImplementation(libs.edc.spi.core)
     testImplementation(libs.edc.lib.crypto)
     testImplementation(libs.edc.lib.keys)
 }

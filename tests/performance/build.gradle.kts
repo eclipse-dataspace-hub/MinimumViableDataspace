@@ -19,7 +19,7 @@ plugins {
 dependencies {
     testImplementation(libs.edc.ext.jsonld)
     testImplementation(libs.edc.identity.did.core)
-    testImplementation(libs.edc.spi.identity.trust)
+    testImplementation(libs.edc.spi.dcp)
     testImplementation(libs.edc.ih.credentials)
     testImplementation(libs.edc.service.identity.trust)
     testImplementation(libs.edc.core.crypto)

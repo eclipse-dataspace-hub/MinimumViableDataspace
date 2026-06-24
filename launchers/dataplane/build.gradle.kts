@@ -24,7 +24,7 @@ dependencies {
     implementation(libs.edc.core.runtime)
     implementation(libs.edc.ext.http)
     implementation(libs.dataplane.sdk)
-    implementation(libs.edc.spi.token)
+    implementation(libs.edc.spi.core)
     implementation(libs.edc.lib.token)
     implementation(libs.edc.lib.crypto)
     implementation(libs.edc.lib.keys)

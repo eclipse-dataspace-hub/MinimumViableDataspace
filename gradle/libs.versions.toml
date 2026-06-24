@@ -28,10 +28,8 @@ edc-core-cel = { module = "org.eclipse.edc:cel-core", version.ref = "edc" }
 edc-decentralized-claims-cel = { module = "org.eclipse.edc:decentralized-claims-cel", version.ref = "edc" }
 
 edc-vault-hashicorp = { module = "org.eclipse.edc:vault-hashicorp", version.ref = "edc" }
-edc-spi-identity-trust = { module = "org.eclipse.edc:decentralized-claims-spi", version.ref = "edc" }
-edc-spi-boot = { module = "org.eclipse.edc:boot-spi", version.ref = "edc" }
-edc-spi-token = { module = "org.eclipse.edc:token-spi", version.ref = "edc" }
-edc-spi-identity-did = { module = "org.eclipse.edc:identity-did-spi", version.ref = "edc" }
+edc-spi-dcp = { module = "org.eclipse.edc:decentralized-claims-spi", version.ref = "edc" }
+edc-spi-core = { module = "org.eclipse.edc:core-spi", version.ref = "edc" }
 edc-spi-dataplane-signaling = { module = "org.eclipse.edc:data-plane-signaling-spi", version.ref = "edc" }
 
 # EDC lib dependencies
