@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: false
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: deepakputhraya/action-pr-title@master
         with:
           # Match pull request titles conventional commit syntax (https://www.conventionalcommits.org/en/v1.0.0/)

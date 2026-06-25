@@ -36,7 +36,7 @@ jobs:
     outputs:
       branch_name: ${{ steps.resolve_branch.outputs.branch_name }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - id: check-tag
@@ -75,7 +75,7 @@ jobs:
       pages: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Create Release or Bugfix branch
         run: git checkout -b ${{ needs.validate-and-prepare.outputs.branch_name }}
       - name: Initialize mandatory git config
