@@ -24,8 +24,7 @@ dependencies {
     runtimeOnly(libs.edc.bom.identityhub.sql)
 
     testImplementation(libs.edc.spi.core)
-    testImplementation(libs.edc.lib.crypto)
-    testImplementation(libs.edc.lib.keys)
+    testImplementation(libs.edc.lib.core)
 }
 
 application {

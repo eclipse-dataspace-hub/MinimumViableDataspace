@@ -25,9 +25,7 @@ dependencies {
     implementation(libs.edc.ext.http)
     implementation(libs.dataplane.sdk)
     implementation(libs.edc.spi.core)
-    implementation(libs.edc.lib.token)
-    implementation(libs.edc.lib.crypto)
-    implementation(libs.edc.lib.keys)
+    implementation(libs.edc.lib.core)
 
     // needed for the key seed extension
     runtimeOnly(libs.tink)

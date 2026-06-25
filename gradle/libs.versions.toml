@@ -32,13 +32,10 @@ edc-spi-dcp = { module = "org.eclipse.edc:decentralized-claims-spi", version.ref
 edc-spi-core = { module = "org.eclipse.edc:core-spi", version.ref = "edc" }
 edc-spi-dataplane-signaling = { module = "org.eclipse.edc:data-plane-signaling-spi", version.ref = "edc" }
 
-# EDC lib dependencies
+# EDC lib dependencies (consolidated, see Connector DR 2026-06-18-lib-module-consolidation)
 edc-lib-jws2020 = { module = "org.eclipse.edc:jws2020-lib", version.ref = "edc" }
-edc-lib-transform = { module = "org.eclipse.edc:transform-lib", version.ref = "edc" }
-edc-lib-crypto = { module = "org.eclipse.edc:crypto-common-lib", version.ref = "edc" }
-edc-lib-keys = { module = "org.eclipse.edc:keys-lib", version.ref = "edc" }
-edc-lib-jsonld = { module = "org.eclipse.edc:json-ld-lib", version.ref = "edc" }
-edc-lib-token = { module = "org.eclipse.edc:token-lib", version.ref = "edc" }
+edc-lib-jsonld = { module = "org.eclipse.edc:jsonld-lib", version.ref = "edc" }
+edc-lib-core = { module = "org.eclipse.edc:core-lib", version.ref = "edc" }
 
 # EDC Postgres modules
 edc-store-participantcontext-config-sql = { module = "org.eclipse.edc:participantcontext-config-store-sql", version.ref = "edc" }
