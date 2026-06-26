@@ -53,7 +53,7 @@ edc-issuance-spi = { module = "org.eclipse.edc:issuerservice-issuance-spi", vers
 awaitility = { module = "org.awaitility:awaitility", version.ref = "awaitility" }
 restAssured = { module = "io.rest-assured:rest-assured", version.ref = "restAssured" }
 jakarta-json-api = { module = "jakarta.json:jakarta.json-api", version.ref = "jakarta-json" }
-tink = { module = "com.google.crypto.tink:tink", version = "1.21.0" }
+tink = { module = "com.google.crypto.tink:tink", version = "1.22.0" }
 jackson-datatype-jakarta-jsonp = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jakarta-jsonp", version.ref = "jackson" }
 parsson = { module = "org.eclipse.parsson:parsson", version.ref = "parsson" }
 dataplane-sdk = { module = "org.eclipse.dataplane-core:dataplane-sdk", version.ref = "dataplane-sdk" }
