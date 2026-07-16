@@ -37,11 +37,11 @@ import static org.eclipse.edc.demo.tests.TestConstants.TEST_TIMEOUT_DURATION;
 @EndToEndTest
 public class CredentialIssuanceEndToEndTest {
 
-    private static final String CONSUMER_IDENTITYHUB_IDENTITY_URL = "http://ih.consumer.localhost:8080/cs";
+    private static final String CONSUMER_IDENTITYHUB_IDENTITY_URL = "http://ih.consumer.localhost/cs";
     private static final String PARTICIPANT_CONTEXT_ID = "consumer-participant";
     private static final String ISSUER_DID = "did:web:issuerservice.issuer.svc.cluster.local%3A10016:issuer";
     private static final String HOLDER_PID = UUID.randomUUID().toString();
-    private static final String KEYCLOAK_URL = "http://keycloak.localhost:8080";
+    private static final String KEYCLOAK_URL = "http://keycloak.localhost";
 
     private static RequestSpecification baseRequest() {
         return given()

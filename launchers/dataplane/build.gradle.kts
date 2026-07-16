@@ -24,6 +24,7 @@ dependencies {
     implementation(libs.edc.core.runtime)
     implementation(libs.edc.ext.http)
     implementation(libs.dataplane.sdk)
+    implementation(libs.dataplane.sdk.jakarta.ee)
     implementation(libs.edc.spi.core)
     implementation(libs.edc.lib.core)
 

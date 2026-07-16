@@ -3,7 +3,7 @@ format.version = "1.1"
 
 [versions]
 awaitility = "4.3.0"
-dataplane-sdk = "0.0.10-SNAPSHOT"
+dataplane-sdk = "1.0.0"
 edc = "0.19.0-SNAPSHOT"
 edc-build = "1.5.2"
 jackson = "2.22.1"
@@ -56,7 +56,8 @@ jakarta-json-api = { module = "jakarta.json:jakarta.json-api", version.ref = "ja
 tink = { module = "com.google.crypto.tink:tink", version = "1.21.0" }
 jackson-datatype-jakarta-jsonp = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jakarta-jsonp", version.ref = "jackson" }
 parsson = { module = "org.eclipse.parsson:parsson", version.ref = "parsson" }
-dataplane-sdk = { module = "org.eclipse.dataplane-core:dataplane-sdk", version.ref = "dataplane-sdk" }
+dataplane-sdk = { module = "org.eclipse.dataplane-core:dataplane-sdk-core", version.ref = "dataplane-sdk" }
+dataplane-sdk-jakarta-ee = { module = "org.eclipse.dataplane-core:dataplane-sdk-jakarta-ee", version.ref = "dataplane-sdk" }
 nimbus-jwt = { module = "com.nimbusds:nimbus-jose-jwt", version.ref = "nimbus" }
 
 # BOM modules

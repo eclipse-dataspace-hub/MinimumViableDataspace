@@ -5,7 +5,8 @@ FROM eclipse-temurin:23.0.2_7-jre-alpine
 ARG JVM_ARGS=""
 ARG JAR
 
-RUN apk --no-cache add curl
+# gcompat provides the glibc dynamic loader required by Bouncy Castle LTS' native probe on musl-based Alpine
+RUN apk --no-cache add curl gcompat
 
 WORKDIR /app
 
