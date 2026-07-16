@@ -47,7 +47,7 @@ jobs:
 
       - name: "Setup Kubectl"
         uses: azure/setup-kubectl@v5
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: eclipse-edc/.github/.github/actions/setup-build@main
 
       - name: "Build runtime images"
