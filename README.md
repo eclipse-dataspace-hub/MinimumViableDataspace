@@ -237,8 +237,13 @@ documentation for more information.
 
 ```shell
 # Create the cluster
-kind create cluster -n mvd
+kind create cluster -n mvd --config kind-config.yaml
 ```
+
+> [`kind-config.yaml`](kind-config.yaml) maps host ports 80/443 into the node container. Together with the `hostPort`
+> settings in the Traefik values ([`values.yaml`](values.yaml)) this makes the gateway reachable on `http://localhost`
+> without any port-forwarding. Port mappings are fixed at cluster creation — if you created the cluster without this
+> config, recreate it. Host ports 80/443 must be free when the cluster is created.
 
 ### 4.2 Deploy the MVD components
 
@@ -290,10 +295,10 @@ kubectl wait -A \
   --selector=type=edc-job \
   --for=condition=complete job --all \
   --timeout=90s
-  
-# forward port 80 (might require sudo)
-kubectl port-forward svc/traefik 80:80 -n traefik
 ```
+
+No port-forwarding is needed: Traefik binds ports 80/443 directly on the KinD node, and the cluster's port mappings
+(see [`kind-config.yaml`](kind-config.yaml)) expose them on `http://localhost`.
 
 Once all jobs have finished, type `kubectl get pods -A` and verify the output:
 

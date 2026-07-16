@@ -1,0 +1,30 @@
+#
+# Copyright (c) 2026 Metaform Systems, Inc.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License, Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# Contributors:
+#      Metaform Systems, Inc. - initial API and implementation
+#
+
+# KinD cluster config that maps host ports 80/443 into the (single) node container.
+# Together with the hostPort settings in the Traefik values (values.yaml), this makes
+# the gateway reachable on http://localhost without any kubectl port-forward.
+#
+# Note: port mappings are fixed at cluster creation - to change them, the cluster
+# must be recreated.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      - containerPort: 80
+        hostPort: 80
+        protocol: TCP
+      - containerPort: 443
+        hostPort: 443
+        protocol: TCP

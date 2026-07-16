@@ -44,13 +44,13 @@ import static org.eclipse.edc.demo.tests.TestConstants.TEST_TIMEOUT_DURATION;
 @EndToEndTest
 public class TransferEndToEndTest {
     // Management API base URL of the consumer connector, goes through Ingress controller
-    private static final String CONSUMER_MANAGEMENT_URL = "http://cp.consumer.localhost:8080";
+    private static final String CONSUMER_MANAGEMENT_URL = "http://cp.consumer.localhost";
     // DSP service URL of the provider, not reachable outside the cluster
     private static final String PROVIDER_DSP_URL = "http://controlplane.provider.svc.cluster.local:8082/api/dsp/2025-1";
     // DID of the provider company
     private static final String PROVIDER_ID = "did:web:identityhub.provider.svc.cluster.local%3A7083:provider";
-    private static final String CONSUMER_PROXY_URL = "http://dp.consumer.localhost:8080/api/proxy";
-    private static final String PROVIDER_MANAGEMENT_URL = "http://cp.provider.localhost:8080";
+    private static final String CONSUMER_PROXY_URL = "http://dp.consumer.localhost/api/proxy";
+    private static final String PROVIDER_MANAGEMENT_URL = "http://cp.provider.localhost";
 
     private final TypeTransformerRegistry transformerRegistry = new TypeTransformerRegistryImpl();
     private final JsonLd jsonLd = new TitaniumJsonLd(new ConsoleMonitor());
