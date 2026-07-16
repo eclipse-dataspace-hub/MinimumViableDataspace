@@ -41,12 +41,12 @@ public class ConsumerDataHandler {
     }
 
     public Result<DataFlow> storeDataflow(DataFlow dataFlow) {
-        if (dataFlow.getTransferType().equals("HttpData-PULL")) {
+        if ("HttpData-PULL".equals(dataFlow.getProfile())) {
             ongoingTransfers.put(dataFlow.getId(), dataFlow.getDataAddress());
             return Result.success(dataFlow);
         } else {
-            monitor.warning("TransferType %s not supported".formatted(dataFlow.getTransferType()));
-            return Result.failure(new UnsupportedOperationException("TransferType %s not supported".formatted(dataFlow.getTransferType())));
+            monitor.warning("Profile %s not supported".formatted(dataFlow.getProfile()));
+            return Result.failure(new UnsupportedOperationException("Profile %s not supported".formatted(dataFlow.getProfile())));
         }
     }
 

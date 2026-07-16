@@ -20,6 +20,8 @@ import org.eclipse.dataplane.domain.DataAddress;
 import org.eclipse.dataplane.domain.Result;
 import org.eclipse.dataplane.domain.dataflow.DataFlow;
 import org.eclipse.dataplane.domain.registration.Oauth2ClientCredentialsAuthorization;
+import org.eclipse.dataplane.port.DataPlaneRegistrationApiController;
+import org.eclipse.dataplane.port.DataPlaneSignalingApiController;
 import org.eclipse.edc.http.spi.EdcHttpClient;
 import org.eclipse.edc.keys.KeyParserRegistryImpl;
 import org.eclipse.edc.keys.LocalPublicKeyServiceImpl;
@@ -109,7 +111,7 @@ public class SignalingDataPlaneRuntimeExtension implements ServiceExtension {
                 .registerAuthorization(new Oauth2ClientCredentialsAuthorization())
                 .registerAuthorization(new NoneAuthorization())
                 .endpoint(signalingApiConfig.dataFlowEndpoint(hostname.get()))
-                .transferType("HttpData-PULL")
+                .profile("HttpData-PULL")
                 .onPrepare(this::prepare)
                 .onStart(this::startDataFlow)
                 .onStarted(this::requestData)
@@ -139,8 +141,8 @@ public class SignalingDataPlaneRuntimeExtension implements ServiceExtension {
         var proxyPortMapping = new PortMapping(APICONTEXT_PROXY, proxyApiConfig.port(), proxyApiConfig.path());
         portMappingRegistry.register(proxyPortMapping);
 
-        webService.registerResource(ApiContext.SIGNALING, dataplane.controller());
-        webService.registerResource(ApiContext.SIGNALING, dataplane.registrationController());
+        webService.registerResource(ApiContext.SIGNALING, new DataPlaneSignalingApiController(dataplane));
+        webService.registerResource(ApiContext.SIGNALING, new DataPlaneRegistrationApiController(dataplane));
         webService.registerResource(APICONTEXT_PUBLIC, new DataPlanePublicApiController(httpClient, monitor, tokenValidationService, publicKeyResolver));
         webService.registerResource(APICONTEXT_PROXY, new ConsumerProxyController(dataFetcher));
     }
@@ -153,13 +155,16 @@ public class SignalingDataPlaneRuntimeExtension implements ServiceExtension {
     }
 
     private Result<DataFlow> prepare(DataFlow dataFlow) {
-        return dataFlow.getTransferType().equals("HttpData-PULL")
+        return "HttpData-PULL".equals(dataFlow.getProfile())
                 ? Result.success(dataFlow)
-                : Result.failure(new UnsupportedOperationException("unsupported transfer type: " + dataFlow.getTransferType()));
+                : Result.failure(new UnsupportedOperationException("unsupported profile: " + dataFlow.getProfile()));
     }
 
     private @NotNull Result<DataFlow> startDataFlow(DataFlow dataFlow) {
-        switch (dataFlow.getTransferType()) {
+        if (dataFlow.getProfile() == null) {
+            return Result.failure(new UnsupportedOperationException("no profile specified on data flow " + dataFlow.getId()));
+        }
+        switch (dataFlow.getProfile()) {
             case "NonFinite-PULL", "Finite-PULL", "HttpData-PULL" -> {
 
                 var token = tokenGenerationService.generate(privateKeyId,
@@ -171,7 +176,7 @@ public class SignalingDataPlaneRuntimeExtension implements ServiceExtension {
                 );
 
                 if (token.succeeded()) {
-                    var dataAddress = new DataAddress(dataFlow.getTransferType(), "http",
+                    var dataAddress = new DataAddress("http",
                             publicApiConfig.dataSourceEndpoint(hostname.get(), dataFlow.getId()),
                             List.of(new DataAddress.EndpointProperty("authorization", "access_token", token.getContent().getToken())));
                     dataFlow.setDataAddress(dataAddress);
@@ -183,7 +188,7 @@ public class SignalingDataPlaneRuntimeExtension implements ServiceExtension {
 
             }
             default -> {
-                return Result.failure(new RuntimeException("TransferType %s not supported".formatted(dataFlow.getTransferType())));
+                return Result.failure(new RuntimeException("Profile %s not supported".formatted(dataFlow.getProfile())));
             }
         }
     }
