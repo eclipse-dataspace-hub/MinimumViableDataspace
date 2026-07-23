@@ -10,7 +10,7 @@ jackson = "2.22.1"
 jakarta-json = "2.1.3"
 parsson = "1.1.9"
 nimbus = "10.9.1"
-restAssured = "6.0.0"
+restAssured = "6.0.1"
 
 [libraries]
 # upstream EDC dependencies
